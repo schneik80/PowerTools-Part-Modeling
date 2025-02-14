@@ -7,7 +7,7 @@ app = adsk.core.Application.get()
 ui = app.userInterface
 
 CMD_NAME = "Sketch Repair"
-CMD_ID = "PT-SketchFix"
+CMD_ID = "PTPM-sketchfix"
 CMD_Description = "Attempt to repair a sketch with small gaps or disconnected endpoints."
 IS_PROMOTED = False
 
