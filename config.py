@@ -7,7 +7,6 @@ from .lib import fusionAddInUtils as futil
 DEBUG = True
 ADDIN_NAME = os.path.basename(os.path.dirname(__file__))
 COMPANY_NAME = "IMA LLC"
-COMPANY_HUB = ""
 
 
 design_workspace = "FusionSolidEnvironment"
