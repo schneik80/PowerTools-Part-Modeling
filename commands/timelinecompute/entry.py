@@ -6,22 +6,30 @@ from ... import config
 app = adsk.core.Application.get()
 ui = app.userInterface
 
-CMD_NAME = "Feature Compute time to CSV"
+CMD_NAME = "Timeline Compute time to CSV"
 CMD_ID = "PTPM-timelinecompute"
 CMD_Description = "Dump compute time for each timeline feature to a CSV file. Features are sorted by compute time."
 IS_PROMOTED = False
 
 # Global variables by referencing values from /config.py
 WORKSPACE_ID = config.design_workspace
-TAB_ID = config.tools_tab_id
-TAB_NAME = config.my_tab_name
+TAB_ID = "SolidTab"
+TAB_NAME = "Solid"
 
-PANEL_ID = config.my_panel_id
-PANEL_NAME = config.my_panel_name
-PANEL_AFTER = config.my_panel_after
+PANEL_ID = "InspectPanel"
+PANEL_NAME = "Inspect"
+CMD_AFTER = "InterferenceCheckCommand"
 
 # Resource location for command icons, here we assume a sub folder in this directory named "resources".
-ICON_FOLDER = os.path.join(os.path.dirname(os.path.abspath(__file__)), "resources", "")
+Theme = app.preferences.generalPreferences.userInterfaceTheme
+if Theme == 0:
+    ICON_FOLDER = os.path.join(
+        os.path.dirname(os.path.abspath(__file__)), "resources", ""
+    )
+else:
+    ICON_FOLDER = os.path.join(
+        os.path.dirname(os.path.abspath(__file__)), "resources/dark", ""
+    )
 
 # Local list of event handlers used to maintain a reference so
 # they are not released and garbage collected.
@@ -30,7 +38,7 @@ local_handlers = []
 
 # Executed when add-in is run.
 def start():
-   # ******************************** Create Command Definition ********************************
+    # ******************************** Create Command Definition ********************************
     cmd_def = ui.commandDefinitions.addButtonDefinition(
         CMD_ID, CMD_NAME, CMD_Description, ICON_FOLDER
     )
@@ -50,13 +58,14 @@ def start():
     # Get target panel for the command and and create the panel if necessary.
     panel = toolbar_tab.toolbarPanels.itemById(PANEL_ID)
     if panel is None:
-        panel = toolbar_tab.toolbarPanels.add(PANEL_ID, PANEL_NAME, PANEL_AFTER, False)
+        panel = toolbar_tab.toolbarPanels.add(PANEL_ID, PANEL_NAME, "", False)
 
     # Create the command control, i.e. a button in the UI.
-    control = panel.controls.addCommand(cmd_def,"PT-assemblystats", True)
+    control = panel.controls.addCommand(cmd_def, "", True)
 
     # Now you can set various options on the control such as promoting it to always be shown.
     control.isPromoted = IS_PROMOTED
+
 
 # Executed when add-in is stopped.
 def stop():
@@ -103,12 +112,12 @@ def command_execute(args: adsk.core.CommandCreatedEventArgs):
     ui = None
     try:
         app = adsk.core.Application.get()
-        ui  = app.userInterface
+        ui = app.userInterface
         docName = app.activeDocument.name
 
         feats = app.executeTextCommand("fusion.DumpFeaturesByComputeTime /csv")
         print(feats)
-        
+
         # Set styles of file dialog.
         folderDlg = ui.createFolderDialog()
         folderDlg.title = "Choose Folder to save CSV file"
