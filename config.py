@@ -1,5 +1,4 @@
 import adsk.core
-import os
 import os.path
 import json
 from .lib import fusionAddInUtils as futil
@@ -13,6 +12,6 @@ design_workspace = "FusionSolidEnvironment"
 tools_tab_id = "ToolsTab"
 my_tab_name = "Power Tools"
 
-my_panel_id = f"{ADDIN_NAME}_panel_2"
-my_panel_name = "Tools"
+my_panel_id = f"PT_{my_tab_name}"
+my_panel_name = "Power Tools"
 my_panel_after = ""
