@@ -25,15 +25,19 @@ body {
 }
 .timeline-compute-report {
     overflow: auto;
-    width: 100%;
+    width: 90%;
+    margin: 20px;
+
 }
 .timeline-compute-report table {
     border: 1px solid #dededf;
     width: 100%;
-    table-layout: fixed;
+    table-layout: auto;
     border-collapse: collapse;
     border-spacing: 1px;
     text-align: left;
+    font-size: 12px;
+
 }
 .timeline-compute-report caption {
     caption-side: top;
@@ -43,19 +47,21 @@ body {
     border: 1px solid #dededf;
     background-color: #eceff1;
     color: #000000;
-    padding: 5px;
+    padding: 2px;
 }
 .timeline-compute-report td {
     border: 1px solid #dededf;
-    padding: 5px;
+    padding: 2px;
 }
 .timeline-compute-report tr:nth-child(even) td {
     background-color: #ffffff;
     color: #000000;
+
 }
 .timeline-compute-report tr:nth-child(odd) td {
-    background-color: #ffffff;
+    background-color: #f5f5f5;
     color: #000000;
+
 }
 </style>
 """
@@ -187,11 +193,24 @@ def command_execute(args: adsk.core.CommandCreatedEventArgs) -> None:
     Args:
         args: Command execution arguments
     """
+
     ui = None
     try:
         app = adsk.core.Application.get()
         ui = app.userInterface
         doc_name = app.activeDocument.name
+
+        # Check if the active document is a timeline design
+        product = app.activeProduct
+        design = adsk.fusion.Design.cast(product)
+
+        if not design:
+            ui.messageBox("No active Fusion 360 design.")
+            return
+
+        if design.designType == adsk.fusion.DesignTypes.DirectDesignType:
+            ui.messageBox("The design is in Direct Design mode.")
+            return
 
         # Generate timeline features data
         features_data = app.executeTextCommand("fusion.DumpFeaturesByComputeTime /csv")
@@ -351,13 +370,14 @@ def _get_table_header() -> str:
             <th>Component</th>
             <th>Feature</th>
             <th>Time (seconds)</th>
+            <th>Percent</th>
             <th>Health</th>
         </tr>
     </thead>
     <tbody>"""
 
 
-def _generate_table_content(csv_filepath: str) -> str:
+def _generate_table_content(csv_filepath: str, total_time: float) -> str:
     """
     Generate HTML table content from CSV data.
 
@@ -377,13 +397,24 @@ def _generate_table_content(csv_filepath: str) -> str:
             next(reader, None)
 
             for row in reader:
+                # Calculate percentage based on current row's time value
+                try:
+                    current_time = float(row[2])  # Time is in the third column
+                    temppercent = round((current_time / total_time) * 100)
+                    # Ensure value is between 0 and 100
+                    temppercent = max(0, min(100, temppercent))
+                    # Format to three digits
+                    temppercent = f"{temppercent:03d}"
+                except (ValueError, ZeroDivisionError):
+                    temppercent = "000"
+
                 # Ensure we have at least 4 columns, pad with empty strings if necessary
                 padded_row = row + [""] * (4 - len(row))
 
                 # Escape HTML characters in cell content
                 escaped_cells = [_escape_html(str(cell)) for cell in padded_row[:4]]
 
-                row_html = f"<tr><td>{escaped_cells[0]}</td><td>{escaped_cells[1]}</td><td>{escaped_cells[2]}</td><td>{escaped_cells[3]}</td></tr>"
+                row_html = f'<tr><td>{escaped_cells[0]}</td><td>{escaped_cells[1]}</td><td>{escaped_cells[2]}</td><td><img src="file:///{_get_bar_sequence_path(temppercent)}"> {temppercent}%</td><td>{escaped_cells[3]}</td></tr>'
                 rows.append(row_html)
 
     except (FileNotFoundError, IOError) as e:
@@ -426,6 +457,27 @@ def _get_html_footer() -> str:
 </html>"""
 
 
+def _get_bar_sequence_path(percent: str) -> str:
+    """
+    Get the path to the SVG bar sequence resources.
+
+    Args:
+        percent: Percentage as integer value to determine the path
+
+    Returns:
+        Path to the SVG bar sequence directory
+    """
+    path = os.path.join(
+        os.path.dirname(os.path.abspath(__file__)),
+        "resources",
+        "bar",
+        "sequence",
+        f"{percent}.svg",
+    )
+
+    return Path(path).as_posix()
+
+
 def _generate_html_report(
     document_name: str, csv_filepath: str, total_time: float
 ) -> str:
@@ -449,7 +501,7 @@ def _generate_html_report(
             f.write(_get_html_css())
             f.write(_get_html_header(document_name, total_time))
             f.write(_get_table_header())
-            f.write(_generate_table_content(csv_filepath))
+            f.write(_generate_table_content(csv_filepath, total_time))
             f.write(_get_html_footer())
 
         # Convert to POSIX-style path for cross-platform compatibility
