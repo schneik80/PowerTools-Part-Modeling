@@ -56,9 +56,9 @@ Provide Cloud Data information on the active document. Reports on Hub, Project a
 
 Show the history of the active document.
 
-**[Feature Compute to CSV](./docs/Timeline%20Compute%20Times.md)**
+**[Timeline Compute Report](./docs/Timeline%20Compute%20Times.md)**
 
-Export the active document's timeline feature compute times to a CSV file in a directory of your choosing. Features are sorted by compute time.
+Show a report for each features compute time and the total timeline compute. Report is sorted from shortest to longes compute time.
 
 ---
 

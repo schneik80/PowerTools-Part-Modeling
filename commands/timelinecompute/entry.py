@@ -63,9 +63,9 @@ body {
 app = adsk.core.Application.get()
 ui = app.userInterface
 
-CMD_NAME = "Timeline Compute time to CSV"
+CMD_NAME = "Timeline Compute Report"
 CMD_ID = "PTPM-timelinecompute"
-CMD_Description = "Dump compute time for each timeline feature to a CSV file. Features are sorted by compute time."
+CMD_Description = "Display a timeline compute report. Also exports a CSF as source data. Features are sorted by compute time."
 IS_PROMOTED = False
 
 # Global variables by referencing values from /config.py
@@ -206,13 +206,14 @@ def command_execute(args: adsk.core.CommandCreatedEventArgs) -> None:
         # Generate HTML report
         html_filepath = _generate_html_report(doc_name, csv_filepath, total_time)
 
+        # Debug log the report generation
         futil.log(
             f"Report generated - CSV: {csv_filepath}, "
             f"Total time: {format_time_duration(total_time)}, "
             f"HTML: {html_filepath}"
         )
 
-        # Display the HTML report
+        # Display the HTML report using Fusion built in QTWebBrowser
         app.executeTextCommand(f"QTWebBrowser.Display file:///{html_filepath}")
 
     except Exception as e:
@@ -268,7 +269,7 @@ def format_time_duration(seconds: float) -> str:
 
 def _calculate_total_compute_time(csv_filepath: str) -> float:
     """
-    Calculate the total compute time from the CSV file.
+    Calculate the total compute time from the CSV file. Assumes the third column contains time in seconds.
 
     Args:
         csv_filepath: Path to the CSV file
@@ -329,7 +330,8 @@ def _get_html_header(document_name: str, total_time: float) -> str:
 </head>
 <body>
 <h1>{document_name} Timeline Report</h1>
-<p>Total timeline compute: {format_time_duration(total_time)} <i>(hour:minutes:seconds.milliseconds)</i></p>
+<p>Total timeline compute: {format_time_duration(total_time)} <i>(hour:minutes:seconds.milliseconds)</i><br>
+Table sorted from shortest to longest feature compute.</p>
 <br>
 """
 
