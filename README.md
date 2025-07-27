@@ -18,4 +18,4 @@ Highlight under-constrained sketch entities.
 
 **[Timeline Compute Report](./docs/Timeline%20Compute%20Times.md)**
 
-Show a report for each features compute time and the total timeline compute. Report is sorted from shortest to longes compute time.
+Show a report for each feature's compute time and the total timeline compute time. Report is sorted from shortest to longes compute time and also displays the health of each feature.
