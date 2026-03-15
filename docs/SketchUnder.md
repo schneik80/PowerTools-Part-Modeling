@@ -89,4 +89,4 @@ C4Component
 
 [Back to README](../README.md)
 
-IMA LLC Copyright
+*Copyright © 2026 IMA LLC. All rights reserved.*

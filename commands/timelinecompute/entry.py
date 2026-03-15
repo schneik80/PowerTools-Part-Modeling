@@ -205,7 +205,7 @@ def command_execute(args: adsk.core.CommandCreatedEventArgs) -> None:
         design = adsk.fusion.Design.cast(product)
 
         if not design:
-            ui.messageBox("No active Fusion 360 design.")
+            ui.messageBox("No active Fusion design.")
             return
 
         if design.designType == adsk.fusion.DesignTypes.DirectDesignType:
@@ -337,7 +337,7 @@ def _get_html_header(document_name: str, total_time: float) -> str:
     Generate the HTML header section.
 
     Args:
-        document_name: Name of the Fusion 360 document
+        document_name: Name of the Fusion document
         total_time: Total compute time in seconds
 
     Returns:
@@ -485,7 +485,7 @@ def _generate_html_report(
     Generate a complete HTML report from CSV data.
 
     Args:
-        document_name: Name of the Fusion 360 document
+        document_name: Name of the Fusion document
         csv_filepath: Path to the CSV file containing timeline data
         total_time: Total compute time in seconds
 

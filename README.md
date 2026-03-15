@@ -69,3 +69,13 @@ For full usage details, see [Timeline Compute Report](./docs/Timeline%20Compute%
 ## Support
 
 This add-in is developed and maintained by IMA LLC.
+
+---
+
+## License
+
+This project is released under the [MIT License](LICENSE).
+
+---
+
+*Copyright © 2026 IMA LLC. All rights reserved.*
