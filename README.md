@@ -1,4 +1,4 @@
-# Power Tools for Part Modeling
+# PowerTools: Part Modeling Tools for Autodesk Fusion
 
 Power Tools for Part Modeling is an Autodesk Fusion add-in that provides productivity and analysis utilities to support mechanical part design workflows. It includes commands for sketch repair, constraint analysis, and model timeline performance reporting.
 
