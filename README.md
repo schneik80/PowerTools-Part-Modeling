@@ -1,6 +1,6 @@
 # PowerTools: Part Modeling Tools for Autodesk Fusion
 
-Power Tools for Part Modeling is an Autodesk Fusion add-in that provides productivity and analysis utilities to support mechanical part design workflows. It includes commands for sketch repair, constraint analysis, and model timeline performance reporting.
+Power Tools for Part Modeling is an Autodesk Fusion add-in that provides productivity, utility, and analysis commands to support mechanical part design workflows. It includes commands for sketch repair, constraint analysis, model timeline performance reporting, and bulk visibility management.
 
 ## Prerequisites
 
@@ -30,6 +30,7 @@ The following commands are included in this add-in:
 | [Sketch Under-Constrained](./docs/SketchUnder.md) | Productivity | Sketch &rsaquo; Modify | Highlights sketch entities that lack sufficient constraints or dimensions. |
 | [Timeline Compute Report](./docs/Timeline%20Compute%20Times.md) | Analysis | Solid &rsaquo; Inspect | Generates a sortable HTML report of feature compute times across the model timeline. |
 | [Create Mirrored Design](./docs/MirrorDerive.md) | Productivity | Solid &rsaquo; Create | Derives all model bodies into a new document, saves as `<active-name>-mirror`, applies scale `-1`, and saves again. |
+| [Hide Objects](./docs/HideObjects.md) | Utility | Tools &rsaquo; Utility | Hides selected categories of reference and construction geometry across all components in the active design. |
 
 ---
 
@@ -60,6 +61,20 @@ The **Create Mirrored Design** command creates a new design based on the current
 - The active product must be a Fusion design.
 - The active design must already be saved to Fusion (must have a Data File).
 - The command must be run from the Design workspace.
+
+---
+
+## Utility tools
+
+### Hide Objects
+
+The **Hide Objects** command hides selected categories of reference and construction geometry across every component in the active design in a single operation. Use it to quickly declutter the viewport before sharing, rendering, or reviewing a model.
+
+All eight object categories are enabled by default: Origin, Construction Points, Construction Axes, Construction Planes, Joint Origins, Joints, Sketches, and Canvas. Uncheck any category you want to leave visible before clicking **OK**.
+
+**Requirements:** A design document must be open in the Design workspace.
+
+For full usage details, see [Hide Objects](./docs/HideObjects.md).
 
 ---
 

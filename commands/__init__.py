@@ -2,6 +2,7 @@ from .sketchfix import entry as sketchfix
 from .sketchunderconstrained import entry as sketchunderconstrained
 from .timelinecompute import entry as timelinecompute
 from .mirrorderive import entry as mirrorderive
+from .hideobjects import entry as hideobjects
 
 # Fusion will automatically call the start() and stop() functions.
 commands = [
@@ -9,6 +10,7 @@ commands = [
     sketchunderconstrained,
     timelinecompute,
     mirrorderive,
+    hideobjects,
 ]
 
 
