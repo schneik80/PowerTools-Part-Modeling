@@ -12,14 +12,13 @@ ui = app.userInterface
 
 CMD_NAME = "Create Mirrored Design"
 CMD_ID = "PTPM-createmirrordesign"
-CMD_DESCRIPTION = "Create a new design by deriving all bodies, creating scale features at 1 from origin, then editing scale parameters to -1, and saving as <name>-mirror."
+CMD_DESCRIPTION = "Save the active documents bodies as an associative mirror using derive. Names the component after the source plus -Mirror"
 IS_PROMOTED = False
 
 WORKSPACE_ID = config.design_workspace
-TAB_ID = config.tools_tab_id
-TAB_NAME = "Tools"
-PANEL_ID = config.my_panel_id
-PANEL_NAME = config.my_panel_name
+TAB_ID = "SolidTab"
+PANEL_ID = "SolidCreatePanel"
+DERIVE_CMD_ID = "FusionInsertDeriveCommand"
 
 ICON_FOLDER = os.path.join(os.path.dirname(os.path.abspath(__file__)), "resources", "")
 
@@ -33,20 +32,17 @@ def start() -> None:
         )
         futil.add_handler(cmd_def.commandCreated, command_created)
 
-        workspace = ui.workspaces.itemById(WORKSPACE_ID)
-        if not workspace:
-            futil.log(f"Warning: Workspace {WORKSPACE_ID} not found")
+        solid_tab = ui.allToolbarTabs.itemById(TAB_ID)
+        if not solid_tab:
+            futil.log(f"Warning: Toolbar tab {TAB_ID} not found")
             return
 
-        toolbar_tab = workspace.toolbarTabs.itemById(TAB_ID)
-        if toolbar_tab is None:
-            toolbar_tab = workspace.toolbarTabs.add(TAB_ID, TAB_NAME)
+        panel = solid_tab.toolbarPanels.itemById(PANEL_ID)
+        if not panel:
+            futil.log(f"Warning: Panel {PANEL_ID} not found in {TAB_ID}")
+            return
 
-        panel = toolbar_tab.toolbarPanels.itemById(PANEL_ID)
-        if panel is None:
-            panel = toolbar_tab.toolbarPanels.add(PANEL_ID, PANEL_NAME, "", False)
-
-        control = panel.controls.addCommand(cmd_def, "", False)
+        control = panel.controls.addCommand(cmd_def, DERIVE_CMD_ID, False)
         control.isPromoted = IS_PROMOTED
 
     except Exception as e:
@@ -55,12 +51,11 @@ def start() -> None:
 
 def stop() -> None:
     try:
-        workspace = ui.workspaces.itemById(WORKSPACE_ID)
-        if not workspace:
+        solid_tab = ui.allToolbarTabs.itemById(TAB_ID)
+        if not solid_tab:
             return
 
-        panel = workspace.toolbarPanels.itemById(PANEL_ID)
-        toolbar_tab = workspace.toolbarTabs.itemById(TAB_ID)
+        panel = solid_tab.toolbarPanels.itemById(PANEL_ID)
         command_control = panel.controls.itemById(CMD_ID) if panel else None
         command_definition = ui.commandDefinitions.itemById(CMD_ID)
 
@@ -69,12 +64,6 @@ def stop() -> None:
 
         if command_definition:
             command_definition.deleteMe()
-
-        if panel and panel.controls.count == 0:
-            panel.deleteMe()
-
-        if toolbar_tab and toolbar_tab.toolbarPanels.count == 0:
-            toolbar_tab.deleteMe()
 
     except Exception as e:
         futil.log(f"Error stopping {CMD_NAME}: {e}")
