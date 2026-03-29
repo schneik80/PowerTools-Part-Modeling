@@ -29,7 +29,7 @@ The following commands are included in this add-in:
 | [Sketch Repair](./docs/SketchFix.md) | Productivity | Sketch &rsaquo; Modify | Repairs small gaps and disconnected endpoints in the active sketch. |
 | [Sketch Under-Constrained](./docs/SketchUnder.md) | Productivity | Sketch &rsaquo; Modify | Highlights sketch entities that lack sufficient constraints or dimensions. |
 | [Timeline Compute Report](./docs/Timeline%20Compute%20Times.md) | Analysis | Solid &rsaquo; Inspect | Generates a sortable HTML report of feature compute times across the model timeline. |
-| Create Mirrored Design | Productivity | Tools &rsaquo; Power Tools | Derives all model bodies into a new document, saves as `<active-name>-mirror`, applies scale `-1`, and saves again. |
+| [Create Mirrored Design](./docs/MirrorDerive.md) | Productivity | Solid &rsaquo; Create | Derives all model bodies into a new document, saves as `<active-name>-mirror`, applies scale `-1`, and saves again. |
 
 ---
 
