@@ -25,10 +25,11 @@ To have the add-in load automatically each time Fusion starts, select **Run on S
 The following commands are included in this add-in:
 
 | Command | Category | Location | Description |
-|---|---|---|---|
+| --- | --- | --- | --- |
 | [Sketch Repair](./docs/SketchFix.md) | Productivity | Sketch &rsaquo; Modify | Repairs small gaps and disconnected endpoints in the active sketch. |
 | [Sketch Under-Constrained](./docs/SketchUnder.md) | Productivity | Sketch &rsaquo; Modify | Highlights sketch entities that lack sufficient constraints or dimensions. |
 | [Timeline Compute Report](./docs/Timeline%20Compute%20Times.md) | Analysis | Solid &rsaquo; Inspect | Generates a sortable HTML report of feature compute times across the model timeline. |
+| Create Mirrored Design | Productivity | Tools &rsaquo; Power Tools | Derives all model bodies into a new document, saves as `<active-name>-mirror`, applies scale `-1`, and saves again. |
 
 ---
 
@@ -49,6 +50,16 @@ The **Sketch Under-Constrained** command highlights all sketch entities that are
 **Requirements:** A design document must be open and a sketch must be in active edit mode.
 
 For full usage details, see [Sketch Under-Constrained](./docs/SketchUnder.md).
+
+### Create Mirrored Design
+
+The **Create Mirrored Design** command creates a new design based on the currently active saved 3D design. It derives the model content into a new document, saves the new file using the active document name with `-mirror` appended, scales all derived geometry by `-1`, and saves the result.
+
+**Requirements:**
+
+- The active product must be a Fusion design.
+- The active design must already be saved to Fusion (must have a Data File).
+- The command must be run from the Design workspace.
 
 ---
 
