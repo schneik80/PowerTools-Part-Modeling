@@ -264,7 +264,7 @@ def command_mouse_move(args: adsk.core.MouseEventArgs) -> None:
         if diam_input:
             diam_input.value = radius * 2.0
 
-    _update_preview(radius)
+    _update_preview(radius, hit)
     adsk.core.Application.get().activeViewport.refresh()
 
 
@@ -523,8 +523,9 @@ def _clear_preview() -> None:
         pass
 
 
-def _update_preview(radius: float) -> None:
-    """Clear then redraw the custom graphics preview circle at *radius* (cm)."""
+def _update_preview(radius: float, hit: adsk.core.Point3D | None = None) -> None:
+    """Clear then redraw the custom graphics preview circle at *radius* (cm),
+    with an optional white crosshair at the cursor hit position."""
     _clear_preview()
 
     if _preview_center_model is None or _preview_sketch is None:
@@ -541,15 +542,34 @@ def _update_preview(radius: float) -> None:
 
         sk_plane = _preview_sketch.referencePlane.geometry
         normal = sk_plane.normal
+        white = adsk.fusion.CustomGraphicsSolidColorEffect.create(
+            adsk.core.Color.create(255, 255, 255, 255)
+        )
 
+        # Preview circle – white, thin, dashed
         circle3d = adsk.core.Circle3D.createByCenter(
             _preview_center_model, normal, radius
         )
         curve_gfx = graphics.addCurve(circle3d)
-        curve_gfx.weight = 2.0
-        curve_gfx.color = adsk.fusion.CustomGraphicsSolidColorEffect.create(
-            adsk.core.Color.create(0, 200, 220, 200)
-        )
+        curve_gfx.weight = 1.0
+        curve_gfx.color = white
+
+        # Crosshair at cursor hit – aligned with sketch axes
+        if hit is not None:
+            arm = max(radius * 0.06, 0.4)   # 6 % of radius, min 4 mm
+            sketch = _preview_sketch
+            hit_local = sketch.modelToSketchSpace(hit)
+            hx, hy = hit_local.x, hit_local.y
+
+            h0 = sketch.sketchToModelSpace(adsk.core.Point3D.create(hx - arm, hy, 0.0))
+            h1 = sketch.sketchToModelSpace(adsk.core.Point3D.create(hx + arm, hy, 0.0))
+            v0 = sketch.sketchToModelSpace(adsk.core.Point3D.create(hx, hy - arm, 0.0))
+            v1 = sketch.sketchToModelSpace(adsk.core.Point3D.create(hx, hy + arm, 0.0))
+
+            for p0, p1 in ((h0, h1), (v0, v1)):
+                lg = graphics.addCurve(adsk.core.Line3D.create(p0, p1))
+                lg.weight = 1.0
+                lg.color = white
 
     except Exception:
         futil.log(f"{CMD_NAME} _update_preview failed:\n{traceback.format_exc()}")

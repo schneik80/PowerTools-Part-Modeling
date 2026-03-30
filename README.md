@@ -28,6 +28,7 @@ The following commands are included in this add-in:
 | --- | --- | --- | --- |
 | [Sketch Repair](./docs/SketchFix.md) | Productivity | Sketch &rsaquo; Modify | Repairs small gaps and disconnected endpoints in the active sketch. |
 | [Sketch Under-Constrained](./docs/SketchUnder.md) | Productivity | Sketch &rsaquo; Modify | Highlights sketch entities that lack sufficient constraints or dimensions. |
+| [Circle Center Point](./docs/SketchCircleCenterPoint.md) | Productivity | Sketch &rsaquo; Create | Places a construction circle anchored to an existing sketch point, with a diameter dimension and vertically constrained top point. |
 | [Timeline Compute Report](./docs/Timeline%20Compute%20Times.md) | Analysis | Solid &rsaquo; Inspect | Generates a sortable HTML report of feature compute times across the model timeline. |
 | [Create Mirrored Design](./docs/MirrorDerive.md) | Productivity | Solid &rsaquo; Create | Derives all model bodies into a new document, saves as `<active-name>-mirror`, applies scale `-1`, and saves again. |
 | [Hide Objects](./docs/HideObjects.md) | Utility | Tools &rsaquo; Utility | Hides selected categories of reference and construction geometry across all components in the active design. |
@@ -51,6 +52,14 @@ The **Sketch Under-Constrained** command highlights all sketch entities that are
 **Requirements:** A design document must be open and a sketch must be in active edit mode.
 
 For full usage details, see [Sketch Under-Constrained](./docs/SketchUnder.md).
+
+### Circle Center Point
+
+The **Circle Center Point** command places a construction circle in the active sketch. Select an existing sketch point or vertex as the center, drag the mouse to preview the diameter in real time, then click to commit. A diameter dimension and a vertically constrained sketch point are automatically added at the top of the circle.
+
+**Requirements:** A design document must be open and a sketch must be in active edit mode.
+
+For full usage details, see [Circle Center Point](./docs/SketchCircleCenterPoint.md).
 
 ### Create Mirrored Design
 
