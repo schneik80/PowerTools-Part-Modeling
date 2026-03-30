@@ -1,5 +1,6 @@
 from .sketchfix import entry as sketchfix
 from .sketchunderconstrained import entry as sketchunderconstrained
+from .sketchcirclecenterpoint import entry as sketchcirclecenterpoint
 from .timelinecompute import entry as timelinecompute
 from .mirrorderive import entry as mirrorderive
 from .hideobjects import entry as hideobjects
@@ -8,6 +9,7 @@ from .hideobjects import entry as hideobjects
 commands = [
     sketchfix,
     sketchunderconstrained,
+    sketchcirclecenterpoint,
     timelinecompute,
     mirrorderive,
     hideobjects,
