@@ -1,10 +1,10 @@
-# Circle Center Point
+# Radial Hole Circle
 
 [Back to README](../README.md)
 
 ## Overview
 
-The **Circle Center Point** command places a construction circle in the active sketch by selecting an existing sketch point as the center, then dragging the mouse to the desired radius and clicking to commit. A diameter dimension and a vertically constrained sketch point are automatically added at the top of the circle.
+The **Radial Hole Circle** command places a construction circle in the active sketch by selecting an existing sketch point as the center, then dragging the mouse to the desired radius and clicking to commit. A diameter dimension and a vertically constrained sketch point are automatically added at the top of the circle.
 
 Use this command when you need a reference circle anchored to an existing sketch point with its diameter locked by a driven dimension.
 
@@ -16,17 +16,17 @@ Use this command when you need a reference circle anchored to an existing sketch
 
 ## Access
 
-The **Circle Center Point** command is available in Fusion's **Sketch** tab, in the **Create** panel.
+The **Radial Hole Circle** command is available in Fusion's **Sketch** tab, in the **Create** panel.
 
 1. Open a design document in Autodesk Fusion.
 2. Double-click a sketch in the browser or on the canvas to enter sketch edit mode.
 3. On the **Sketch** tab, select the **Create** panel.
-4. Select **Circle Center Point** from the panel.
+4. Select **Radial Hole Circle** from the panel.
 
 ## How to use
 
 1. Enter sketch edit mode by double-clicking the sketch you want to work in.
-2. Run **Circle Center Point** from the **Create** panel.
+2. Run **Radial Hole Circle** from the **Create** panel.
 3. Click a sketch point or vertex in the viewport to set the circle center.
 4. Move the mouse — a white preview circle and crosshair track the cursor in real time, showing the current diameter.
 5. Click again to commit the circle at the current diameter.
@@ -72,9 +72,9 @@ Both graphics are removed when the command closes.
 
 ```mermaid
 C4Context
-    title System Context — Circle Center Point
+    title System Context — Radial Hole Circle
     Person(user, "Fusion User", "Part designer working in Autodesk Fusion")
-    System(addin, "Circle Center Point", "Power Tools Add-in command that places a construction circle in an active sketch")
+    System(addin, "Radial Hole Circle", "Power Tools Add-in command that places a construction circle in an active sketch")
     System_Ext(fusion, "Autodesk Fusion", "CAD platform and host application")
     Rel(user, addin, "Invokes from Sketch > Create panel")
     Rel(addin, fusion, "Creates sketch geometry via Fusion API")
@@ -85,8 +85,8 @@ C4Context
 
 ```mermaid
 C4Component
-    title Component Diagram — Circle Center Point
-    Container_Boundary(addin, "Circle Center Point Command") {
+    title Component Diagram — Radial Hole Circle
+    Container_Boundary(addin, "Radial Hole Circle Command") {
         Component(button, "Command Button", "Fusion UI Control", "Toolbar button in Sketch > Create panel")
         Component(created, "command_created()", "Python", "Builds dialog UI and registers all event handlers")
         Component(input_changed, "command_input_changed()", "Python", "Captures selected center point and calibrates viewport offset")

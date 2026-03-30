@@ -10,7 +10,7 @@ from ... import config
 app = adsk.core.Application.get()
 ui = app.userInterface
 
-CMD_NAME = "Circle Center Point"
+CMD_NAME = "Radial Hole Circle"
 CMD_ID = "PTPM-sketchcirclecenterpoint"
 CMD_Description = (
     "In an active sketch, interactively place a construction circle by selecting "
