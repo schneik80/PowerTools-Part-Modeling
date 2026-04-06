@@ -20,49 +20,134 @@ HOURS_PER_DAY = 24
 
 # HTML template constants
 HTML_CSS_TEMPLATE = """<style>
-body {
-    font-family: Arial, Helvetica, sans-serif;
-}
-.timeline-compute-report {
-    overflow: auto;
-    width: 90%;
-    margin: 20px;
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+    body {
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+        background: #f5f6fa;
+        color: #2d3436;
+        line-height: 1.5;
+        padding: 24px;
+    }
 
-}
-.timeline-compute-report table {
-    border: 1px solid #dededf;
-    width: 100%;
-    table-layout: auto;
-    border-collapse: collapse;
-    border-spacing: 1px;
-    text-align: left;
-    font-size: 12px;
+    /* Header */
+    .report-header {
+        background: #1a1a2e;
+        color: #ffffff;
+        padding: 20px 28px;
+        border-radius: 8px;
+        margin-bottom: 20px;
+    }
+    .report-header h1 {
+        font-size: 20px;
+        font-weight: 600;
+        margin-bottom: 4px;
+    }
+    .report-header .subtitle {
+        font-size: 13px;
+        color: #b2bec3;
+    }
 
-}
-.timeline-compute-report caption {
-    caption-side: top;
-    text-align: left;
-}
-.timeline-compute-report th {
-    border: 1px solid #dededf;
-    background-color: #eceff1;
-    color: #000000;
-    padding: 2px;
-}
-.timeline-compute-report td {
-    border: 1px solid #dededf;
-    padding: 2px;
-}
-.timeline-compute-report tr:nth-child(even) td {
-    background-color: #ffffff;
-    color: #000000;
+    /* Summary card */
+    .summary-card {
+        background: #ffffff;
+        border-radius: 8px;
+        padding: 18px 22px;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        margin-bottom: 20px;
+    }
+    .summary-card .detail {
+        font-size: 13px;
+        color: #636e72;
+        margin-bottom: 3px;
+    }
+    .summary-card .detail b {
+        color: #2d3436;
+    }
 
-}
-.timeline-compute-report tr:nth-child(odd) td {
-    background-color: #f5f5f5;
-    color: #000000;
+    /* Table wrapper */
+    .timeline-compute-report {
+        background: #ffffff;
+        border-radius: 8px;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        overflow: hidden;
+    }
+    .timeline-compute-report h2 {
+        font-size: 15px;
+        font-weight: 600;
+        padding: 14px 22px;
+        border-bottom: 1px solid #eee;
+    }
+    .timeline-compute-report table {
+        width: 100%;
+        table-layout: auto;
+        border-collapse: collapse;
+        font-size: 13px;
+    }
+    .timeline-compute-report th {
+        text-align: left;
+        padding: 10px 16px;
+        background: #f8f9fa;
+        color: #636e72;
+        font-size: 11px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.4px;
+        border-bottom: 2px solid #eee;
+    }
+    .timeline-compute-report td {
+        padding: 9px 16px;
+        border-bottom: 1px solid #f0f0f0;
+    }
+    .timeline-compute-report tr:last-child td {
+        border-bottom: none;
+    }
+    .timeline-compute-report tr:nth-child(even) td {
+        background: #ffffff;
+    }
+    .timeline-compute-report tr:nth-child(odd) td {
+        background: #fafafa;
+    }
 
-}
+    /* Health state badges */
+    .health-healthy {
+        display: inline-block;
+        padding: 1px 8px;
+        border-radius: 10px;
+        font-size: 11px;
+        font-weight: 600;
+        background: #d4edda;
+        color: #155724;
+    }
+    .health-warning {
+        display: inline-block;
+        padding: 1px 8px;
+        border-radius: 10px;
+        font-size: 11px;
+        font-weight: 600;
+        background: #fff3cd;
+        color: #856404;
+    }
+    .health-error {
+        display: inline-block;
+        padding: 1px 8px;
+        border-radius: 10px;
+        font-size: 11px;
+        font-weight: 600;
+        background: #f8d7da;
+        color: #721c24;
+    }
+
+    /* Footer */
+    .report-footer {
+        margin-top: 20px;
+        text-align: center;
+        font-size: 11px;
+        color: #b2bec3;
+    }
 </style>
 """
 
@@ -343,15 +428,21 @@ def _get_html_header(document_name: str, total_time: float) -> str:
     Returns:
         HTML header as string
     """
-    return f"""<html>
+    return f"""<!DOCTYPE html>
+<html lang="en">
 <head>
-    <title>{document_name} Timeline Report</title>
+    <meta charset="UTF-8">
+    <title>{document_name} Timeline Compute Report</title>
 </head>
 <body>
-<h1>{document_name} Timeline Report</h1>
-<p>Total timeline compute: {format_time_duration(total_time)} <i>(hour:minutes:seconds.milliseconds)</i><br>
-Table sorted from shortest to longest feature compute.</p>
-<br>
+    <div class="report-header">
+        <h1>{_escape_html(document_name)} &mdash; Timeline Compute Report</h1>
+        <div class="subtitle">Features sorted from shortest to longest compute time</div>
+    </div>
+
+    <div class="summary-card">
+        <div class="detail"><b>Total Compute Time:</b> {format_time_duration(total_time)} <i>(h:mm:ss.ms)</i></div>
+    </div>
 """
 
 
@@ -363,18 +454,18 @@ def _get_table_header() -> str:
         HTML table header as string
     """
     return """<div class="timeline-compute-report" role="region" tabindex="0">
-<table>
-    <caption>Timeline Details</caption>
-    <thead>
-        <tr>
-            <th>Component</th>
-            <th>Feature</th>
-            <th>Time (seconds)</th>
-            <th>Percent</th>
-            <th>Health</th>
-        </tr>
-    </thead>
-    <tbody>"""
+    <h2>Timeline Details</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Component</th>
+                <th>Feature</th>
+                <th>Time (seconds)</th>
+                <th>Percent</th>
+                <th>Health</th>
+            </tr>
+        </thead>
+        <tbody>"""
 
 
 def _generate_table_content(csv_filepath: str, total_time: float) -> str:
@@ -414,7 +505,18 @@ def _generate_table_content(csv_filepath: str, total_time: float) -> str:
                 # Escape HTML characters in cell content
                 escaped_cells = [_escape_html(str(cell)) for cell in padded_row[:4]]
 
-                row_html = f'<tr><td>{escaped_cells[0]}</td><td>{escaped_cells[1]}</td><td>{escaped_cells[2]}</td><td><img src="file:///{_get_bar_sequence_path(temppercent)}"> {temppercent}%</td><td>{escaped_cells[3]}</td></tr>'
+                # Wrap health state in a badge
+                health_raw = escaped_cells[3].strip().lower()
+                if "error" in health_raw:
+                    health_html = f'<span class="health-error">{escaped_cells[3]}</span>'
+                elif "warning" in health_raw:
+                    health_html = f'<span class="health-warning">{escaped_cells[3]}</span>'
+                elif health_raw:
+                    health_html = f'<span class="health-healthy">{escaped_cells[3]}</span>'
+                else:
+                    health_html = escaped_cells[3]
+
+                row_html = f'<tr><td>{escaped_cells[0]}</td><td>{escaped_cells[1]}</td><td>{escaped_cells[2]}</td><td><img src="file:///{_get_bar_sequence_path(temppercent)}"> {temppercent}%</td><td>{health_html}</td></tr>'
                 rows.append(row_html)
 
     except (FileNotFoundError, IOError) as e:
@@ -450,8 +552,12 @@ def _get_html_footer() -> str:
     Returns:
         HTML footer as string
     """
-    return """    </tbody>
-</table>
+    return """        </tbody>
+    </table>
+</div>
+
+<div class="report-footer">
+    Power Tools Timeline Compute &middot; IMA LLC
 </div>
 </body>
 </html>"""
