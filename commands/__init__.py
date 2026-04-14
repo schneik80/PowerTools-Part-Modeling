@@ -1,3 +1,6 @@
+# SPDX-License-Identifier: GPL-3.0-or-later
+# Copyright (C) 2022-2026 IMA LLC
+
 from .sketchfix import entry as sketchfix
 from .sketchunderconstrained import entry as sketchunderconstrained
 from .sketchcirclecenterpoint import entry as sketchcirclecenterpoint
