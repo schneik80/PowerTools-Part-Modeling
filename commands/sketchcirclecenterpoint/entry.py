@@ -554,17 +554,42 @@ def _update_preview(radius: float, hit: adsk.core.Point3D | None = None) -> None
         curve_gfx.weight = 1.0
         curve_gfx.color = white
 
-        # Crosshair at cursor hit – aligned with sketch axes
+        # Crosshair at cursor hit – fixed pixel size regardless of zoom.
+        # We compute the model-space arm length that projects to PX_ARM pixels
+        # on screen by sampling the local screen-space basis at the hit point.
         if hit is not None:
-            arm = max(radius * 0.06, 0.4)   # 6 % of radius, min 4 mm
+            PX_ARM = 8   # half-length of each crosshair arm, in pixels
             sketch = _preview_sketch
             hit_local = sketch.modelToSketchSpace(hit)
             hx, hy = hit_local.x, hit_local.y
 
-            h0 = sketch.sketchToModelSpace(adsk.core.Point3D.create(hx - arm, hy, 0.0))
-            h1 = sketch.sketchToModelSpace(adsk.core.Point3D.create(hx + arm, hy, 0.0))
-            v0 = sketch.sketchToModelSpace(adsk.core.Point3D.create(hx, hy - arm, 0.0))
-            v1 = sketch.sketchToModelSpace(adsk.core.Point3D.create(hx, hy + arm, 0.0))
+            viewport = app_local.activeViewport
+            hit_screen = viewport.modelToViewSpace(hit)
+            ref_x_mdl = sketch.sketchToModelSpace(
+                adsk.core.Point3D.create(hx + 1.0, hy, 0.0)
+            )
+            ref_y_mdl = sketch.sketchToModelSpace(
+                adsk.core.Point3D.create(hx, hy + 1.0, 0.0)
+            )
+            ref_x_scr = viewport.modelToViewSpace(ref_x_mdl)
+            ref_y_scr = viewport.modelToViewSpace(ref_y_mdl)
+
+            if hit_screen and ref_x_scr and ref_y_scr:
+                px_per_cm_x = math.hypot(
+                    ref_x_scr.x - hit_screen.x, ref_x_scr.y - hit_screen.y
+                )
+                px_per_cm_y = math.hypot(
+                    ref_y_scr.x - hit_screen.x, ref_y_scr.y - hit_screen.y
+                )
+                arm_x = PX_ARM / px_per_cm_x if px_per_cm_x > 1e-9 else 0.4
+                arm_y = PX_ARM / px_per_cm_y if px_per_cm_y > 1e-9 else 0.4
+            else:
+                arm_x = arm_y = 0.4   # fallback: ~4 mm
+
+            h0 = sketch.sketchToModelSpace(adsk.core.Point3D.create(hx - arm_x, hy, 0.0))
+            h1 = sketch.sketchToModelSpace(adsk.core.Point3D.create(hx + arm_x, hy, 0.0))
+            v0 = sketch.sketchToModelSpace(adsk.core.Point3D.create(hx, hy - arm_y, 0.0))
+            v1 = sketch.sketchToModelSpace(adsk.core.Point3D.create(hx, hy + arm_y, 0.0))
 
             for p0, p1 in ((h0, h1), (v0, v1)):
                 lg = graphics.addCurve(adsk.core.Line3D.create(p0, p1))
