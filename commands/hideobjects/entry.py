@@ -4,7 +4,6 @@
 import adsk.core
 import adsk.fusion
 import os
-import traceback
 
 from ...lib import fusionAddInUtils as futil
 from ... import config
@@ -180,7 +179,7 @@ def command_execute(args: adsk.core.CommandEventArgs) -> None:
         futil.log(f"{CMD_NAME} executed successfully.")
 
     except Exception:
-        ui.messageBox("Failed:\n{}".format(traceback.format_exc()), CMD_NAME)
+        futil.handle_error(CMD_NAME, show_message_box=True)
 
 
 def command_destroy(args: adsk.core.CommandEventArgs) -> None:

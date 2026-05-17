@@ -7,7 +7,6 @@ import csv
 import os
 import secrets
 import tempfile
-import traceback
 from pathlib import Path
 from typing import Optional
 
@@ -324,12 +323,9 @@ def command_execute(args: adsk.core.CommandCreatedEventArgs) -> None:
         app.executeTextCommand(f"QTWebBrowser.Display file:///{html_filepath}")
 
     except Exception as e:
-        error_msg = (
-            f"Timeline compute command failed: {str(e)}\n{traceback.format_exc()}"
-        )
-        futil.log(error_msg)
+        futil.handle_error("Timeline compute")
         if ui:
-            ui.messageBox(f"Failed to generate timeline report:\n{str(e)}")
+            ui.messageBox(f"Failed to generate timeline report:\n{e}")
 
 
 def _create_temp_csv_file(data: str) -> str:

@@ -4,7 +4,6 @@
 import adsk.core
 import adsk.fusion
 import os
-import traceback
 from typing import cast
 
 from ...lib import fusionAddInUtils as futil
@@ -271,7 +270,7 @@ def command_execute(args: adsk.core.CommandEventArgs) -> None:
         )
 
     except Exception as e:
-        futil.log(f"{CMD_NAME} failed: {e}\n{traceback.format_exc()}")
+        futil.handle_error(CMD_NAME)
         ui.messageBox(str(e), CMD_NAME)
 
 
